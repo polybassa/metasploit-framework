@@ -24,7 +24,7 @@ class MetasploitModule < Msf::Post
         'SessionTypes'  => ['hwbridge']
       ))
     register_options([
-      OptInt.new('SRCID', [true, "Module ID to query", 0x7e0]),
+      OptInt.new('SRCID', [true, "Module ID to query", 0x7df]),
       OptInt.new('DSTID', [false, "Expected reponse ID, defaults to SRCID + 8", 0x7e8]),
       OptBool.new('CLEAR_DTCS', [false, "Clear any DTCs and reset MIL if errors are present", false]),
       OptString.new('CANBUS', [false, "CAN Bus to perform scan on, defaults to connected bus", nil])

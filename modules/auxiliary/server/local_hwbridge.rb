@@ -182,7 +182,9 @@ class MetasploitModule < Msf::Auxiliary
       return result
     else
       sz = "%02x" % bytes.size
+      padding = Array.new(7 - bytes.size ,0x00)
       bytes = sz + bytes.join
+      bytes = bytes + padding
     end
     # Should we ever require isotpsend for this?
     `which cansend`
