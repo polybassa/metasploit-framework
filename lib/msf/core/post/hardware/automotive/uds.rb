@@ -544,7 +544,7 @@ module UDS
         print_error("ECU Did not return a valid response")
         return []
       end
-      hexpids = packets["Packets"][0]["DATA"][3,6]
+      hexpids = packets["Packets"][0]["DATA"][3..6]
       hexpids = hexpids.join.hex.to_s(2).rjust(32, '0').split('') # Array of 1s and 0s
       (1..20).each do |pid|
         pids << pid if hexpids[pid-1] == "1"
