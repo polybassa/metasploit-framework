@@ -153,12 +153,14 @@ class MetasploitModule < Msf::Auxiliary
         hash["Packets"] << {"ID" => id, "DATA" => data}
       end
     end
+    puts hash.inspect
     hash
   end
 
   def candump(bus, id, timeout, maxpkts)
+    puts "candump #{bus},#{id}:7FF -T #{timeout} -n #{maxpkts}"
     $candump_sniffer = Thread.new do
-      output = `candump #{bus},#{id}:FFFFFF -T #{timeout} -n #{maxpkts}`
+      output = `candump #{bus},#{id}:7FF -T #{timeout} -n #{maxpkts}`
       @pkt_response = candump2hash(output)
       Thread::exit()
     end
@@ -182,9 +184,10 @@ class MetasploitModule < Msf::Auxiliary
       return result
     else
       sz = "%02x" % bytes.size
-      padding = Array.new(7 - bytes.size ,0x00)
-      bytes = sz + bytes.join
+      padding = Array.new(7 - bytes.size ,"%02x" % 0)
       bytes = bytes + padding
+      bytes = sz + bytes.join
+      puts bytes.inspect
     end
     # Should we ever require isotpsend for this?
     `which cansend`
@@ -195,7 +198,8 @@ class MetasploitModule < Msf::Auxiliary
     @can_interfaces.each do |can|
       if can == bus
         candump(bus,dstid,timeout,maxpkts)
-        system("cansend #{bus} #{srcid}##{bytes}")
+        puts "cansend #{bus} #{srcid}##{bytes}"
+	      system("cansend #{bus} #{srcid}##{bytes}")
         result["Success"] = true if $?.success?
         result["Packets"] = []
         $candump_sniffer.join
